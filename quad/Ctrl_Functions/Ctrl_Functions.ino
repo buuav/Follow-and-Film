@@ -42,14 +42,25 @@ void altPIDloop()
 //====================================================================================================
 void yawPIDloop()
 {                                                                  // Does the compss even output negative values.
+  headingError = targetHeading - currentHeading;                   // CurrentHeading will come from the BN0055 When setup
   if((headingError > 0) && (headingError <= 180))
   {
     float hError = map(headingError,0,180,128,255);                      // Want to turn right.
   }
+  else if((headingError > 0) && (headingError > 180))
+  {
+   float hError = map(headingError,181,360,127,0);                      // Want to turn left
+  }
+  else if((headingError < 0) && (headingError <= 180))
+  {
+    float hError = map(headingError,181,360,127,0);                     // Want to turn left
+  }
   else
   {
-   float hError = map(headingError,181,360,127,0);                      // CHECK MAP DIRECTION
+    float hError = map(headingError,0,180,128,255);                     // Want to turn right.
   }
+
+  
   if(abs(headingError) < 20)                                       // If the magnitude of the error is less than 20 deg.
     {
       altPID.SetTunings(AltConsKp,AltConsKi,AltConsKd);
