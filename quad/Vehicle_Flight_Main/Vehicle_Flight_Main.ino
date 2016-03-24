@@ -1,5 +1,5 @@
 //====================================================================================================
-//                                     Vehicle_Flight_Code                                              // WHAT ABOUT DELAY TIMES BOTH ON THE TRANSMITTING END AND THE RECEIVING END 
+//                                     Vehicle_Flight_Code                                              // Updated: 23 Mar 2016 
 //====================================================================================================
 
 #include <Adafruit_GPS.h>                         // used by: GPS
