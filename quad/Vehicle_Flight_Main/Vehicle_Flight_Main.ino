@@ -10,7 +10,7 @@
 #include <Adafruit_BNO055.h>                      // used by BN0055
 #include <utility/imumaths.h>                     // used by BN0055
 #include <PID_v1.h>                               // used for control loops.
-#include <Servo.h>                            // Used for PWM outputs to Pixhawk Controller
+#include <Servo.h>                                // Used for PWM outputs to Pixhawk Controller
 
 //====================================================================================================
 //                                     General_Global_Variables/Declarations                                           
@@ -25,7 +25,7 @@
 Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);
 
 // BN0055 Accelerometer.
-Adafruit_BNO055 bno = Adafruit_BNO055(55);
+Adafruit_BNO055 bno = Adafruit_BNO055();
 
 // GPS Hardware.
 #define GPSECHO false
@@ -73,7 +73,6 @@ double setAltitude = 50;                                    // Around 150 feet?
 double currentAltitude;                                     // Comes from the barometer data
 double altError;                                            // PID has to use type: double?
 double throttleOut;                                         // Pwm Output...Convert to ppm using board.
-int throttlePin = 13;
 double AltAggKp=4, AltAggKi=0.2, AltAggKd=1;                // Define Aggressive and Conservative Tuning Parameters.
 double AltConsKp=1, AltConsKi=0, AltConsKd=0.25;            // Not sure how to decide startting values.
 PID altPID (&currentAltitude, &throttleOut, &setAltitude,   // Specify the links and initial tuning parameters
@@ -147,7 +146,7 @@ void setup(void)
   // Safety
   //checkGPSfix();                                            // Loop until it has a fix.
   //checkXbeeFix();                                           // Loop until we have parsed a non-zero value from transponder.
-  altCheck();                                                 // Loop until we have good altimeter calibration.
+  altCheck();                                               // Loop until we have good altimeter calibration.
 
   // Testing
   pinMode(testAlt,INPUT);
@@ -164,29 +163,31 @@ void loop(void)
    {                                      
      if(GPS.parse(GPS.lastNMEA()) )                       // if we successfully parse it, update our data fields
      {
-
-      while(testAlt)
-      {
-        testAltPID();
-      }
-        // Gather Data
-        processGPS();   
-        processXbee();
-        processBaro(groundPressure);                      // Get current altitude.
-        
-        // Calculate.
-        distanceToWaypoint();
-        courseToWaypoint();
-        
-        // PID Control.
-        altPIDloop();
-        yawPIDloop();
-        
-        // Print (Debugging).
-        printTarget();                                    // Print transponder data.
-        printScreen();                                    // Vehicle GPS Data.
-      }
+      processGPS();
+     }
    }
+  // Gather Data 
+  processXbee();
+  processBaro(groundPressure);                      // Get current altitude.
+  
+  // Calculate.
+  distanceToWaypoint();
+  courseToWaypoint();
+  
+  // PID Control.
+  altPIDloop();
+  yawPIDloop();
+  
+  // Print (Debugging).
+  printTarget();                                    // Print transponder data.
+  printScreen();                                    // Vehicle GPS Data.
+
+  // Test mode Alt.
+//  while(testAlt)
+//{
+//  testAltPID();
+//}
+   
 }
 
 // INFINTIE LOOP TO PREVENT FLYING WHEN THERE IS A LOSS IN COMMUNICATION? 

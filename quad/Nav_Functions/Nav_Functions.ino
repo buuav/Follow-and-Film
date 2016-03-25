@@ -7,7 +7,27 @@
 
 
 
+//====================================================================================================
+//                                         Barometer
+//====================================================================================================
 
+void prcoessIMUheading()
+{
+  uint8_t system,gyro,accel,mag = 0;
+  bno.getCalibration(&system,&gyro,&accel,&mag);
+  usbSerial.print("\t");
+  if (!system)
+  {
+    usbSerial.print("! ");
+  }
+
+  /* Display the individual values */
+  usbSerial.print("Sys:");
+  usbSerial.print(system, DEC);
+  usbSerial.print(" M:");
+  usbSerial.print(mag, DEC);
+  usbSerial.print("\n");
+}
 //====================================================================================================
 //                                         Barometer
 //====================================================================================================
