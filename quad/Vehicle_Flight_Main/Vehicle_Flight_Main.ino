@@ -1,7 +1,6 @@
 //====================================================================================================
-//                                     Vehicle_Flight_Code                                              // Updated: 23 Mar 2016 
+//                                     Vehicle_Flight_Code                                              // WHAT ABOUT DELAY TIMES BOTH ON THE TRANSMITTING END AND THE RECEIVING END 
 //====================================================================================================
-
 #include <Adafruit_GPS.h>                         // used by: GPS
 #include <math.h>                                 // used by: GPS
 #include <XBee.h>                                 // used to receive XBee communication from transponder
@@ -11,7 +10,8 @@
 #include <Adafruit_BNO055.h>                      // used by BN0055
 #include <utility/imumaths.h>                     // used by BN0055
 #include <PID_v1.h>                               // used for control loops.
- 
+#include <Servo.h>                            // Used for PWM outputs to Pixhawk Controller
+
 //====================================================================================================
 //                                     General_Global_Variables/Declarations                                           
 //====================================================================================================
@@ -53,6 +53,9 @@ boolean stringComplete = false;
 double headingError;                                  // WIll be heading to target - current heading.
 double distanceToTarget;
 float groundPressure; 
+
+// PWM Servo Outputs.
+Servo throttle,pitch,roll,yaw;
                        
 // Timer Variables.
 unsigned long start = millis();
@@ -77,7 +80,6 @@ PID altPID (&currentAltitude, &throttleOut, &setAltitude,   // Specify the links
             AltConsKp, AltConsKi, AltConsKd, DIRECT);
 
 // Yaw
-int yawPin = 12;
 double yawOut;
 double currentHeading;
 double yawAggKp=4, yawAggKi=0.2, yawAggKd=1;                // Define Aggressive and Conservative Tuning Parameters.
@@ -133,13 +135,13 @@ void setup(void)
   usbSerial.println("Adafruit GPS library basic test!");
    
   // altPID
-  pinMode(throttlePin,OUTPUT);
+  throttle.attach(13);
   processBaro(groundPressure);
   altError = currentAltitude - setAltitude;
   altPID.SetMode(AUTOMATIC);
 
   // yawPID
-  pinMode(yawPin,OUTPUT);
+  yaw.attach(10);
   altPID.SetMode(AUTOMATIC);
 
   // Safety

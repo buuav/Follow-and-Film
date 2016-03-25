@@ -3,7 +3,7 @@
 //====================================================================================================
 
 /* WHat will the output actually be?
-   DO we need to map every thing to 0-255 range in order to have a proper analogWrit?
+   DO we need to map every thing to 0-255 range in order to have a proper analogWrite?
 */
 
 
@@ -17,11 +17,11 @@ void altPIDloop()
   altError = currentAltitude - setAltitude;
   if(altError < 0)
   {
-    altError = map(altError,-200,0,127,0);                                    // What do we even use for our error range?!?!                         
+    altError = map(altError,-200,0,1500,1000);                                    // What do we even use for our error range?!?!                         
   }
   else
   {
-    altError = map(altError,0,200,128,255);
+    altError = map(altError,0,200,1500,2000);
   }
   
   if(abs(altError) < 30)                                                      // If the magnitude of the distance is larger than 30 meters.
@@ -34,7 +34,7 @@ void altPIDloop()
     }
     
     altPID.Compute();
-    analogWrite(throttlePin, throttleOut);                                    // PWM Control ouput sent to pin 13, THROTTLE.
+    throttle.writeMicroseconds(throttleOut);                                    // PWM Control ouput sent to pin 13, THROTTLE.
 }
 
 //====================================================================================================
@@ -45,19 +45,19 @@ void yawPIDloop()
   headingError = targetHeading - currentHeading;                   // CurrentHeading will come from the BN0055 When setup
   if((headingError > 0) && (headingError <= 180))
   {
-    float hError = map(headingError,0,180,128,255);                      // Want to turn right.
+    float hError = map(headingError,0,180,1500,2000);                      // Want to turn right.
   }
   else if((headingError > 0) && (headingError > 180))
   {
-   float hError = map(headingError,181,360,127,0);                      // Want to turn left
+   float hError = map(headingError,181,360,1500,1000);                      // Want to turn left
   }
   else if((headingError < 0) && (headingError <= 180))
   {
-    float hError = map(headingError,181,360,127,0);                     // Want to turn left
+    float hError = map(headingError,181,360,1500,1000);                     // Want to turn left
   }
   else
   {
-    float hError = map(headingError,0,180,128,255);                     // Want to turn right.
+    float hError = map(headingError,0,180,1500,2000);                     // Want to turn right.
   }
 
   
@@ -71,7 +71,7 @@ void yawPIDloop()
     }
     
     altPID.Compute();
-    analogWrite(yawPin, yawOut);                                    // PWM Control ouput sent to pin 13, THROTTLE.
+    yaw.writeMicroseconds(yawOut);                                    // PWM Control ouput sent to pin 13, THROTTLE.
 }
 
 
