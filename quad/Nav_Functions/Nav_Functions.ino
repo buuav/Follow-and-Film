@@ -8,25 +8,24 @@
 
 
 //====================================================================================================
-//                                         Barometer
+//                                         IMU: BN0055
 //====================================================================================================
 
-void prcoessIMUheading()
+void processIMUheading()
 {
-  uint8_t system,gyro,accel,mag = 0;
-  bno.getCalibration(&system,&gyro,&accel,&mag);
-  usbSerial.print("\t");
-  if (!system)
-  {
-    usbSerial.print("! ");
-  }
-
-  /* Display the individual values */
-  usbSerial.print("Sys:");
-  usbSerial.print(system, DEC);
-  usbSerial.print(" M:");
-  usbSerial.print(mag, DEC);
-  usbSerial.print("\n");
+  imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+  currentHeading = euler.x();                                 
+  currentRoll = euler.y();                                    // CHECK THE AXES...
+  currentPitch = euler.z();
+  
+  /* Display the floating point data */
+  Serial.print("X: ");
+  Serial.print(euler.x());                                    // Yaw compass heading in degrees.
+  Serial.print(" Y: ");
+  Serial.print(euler.y());
+  Serial.print(" Z: ");
+  Serial.print(euler.z());
+  Serial.print("\t\t");
 }
 //====================================================================================================
 //                                         Barometer
@@ -170,7 +169,7 @@ void processXbee ()
 }
 
 //====================================================================================================
-//                                             Safety
+//                                          Safety
 //====================================================================================================
 
 void checkGPSfix()
@@ -206,7 +205,7 @@ void altCheck()
 }
 
 //====================================================================================================
-//                                            Debug
+//                                          Debug
 //====================================================================================================
 
 // Prints Target Coordinates to Serial.
@@ -257,14 +256,6 @@ void printScreen()
 }
 }
 
-//====================================================================================================
-//                                             Testing
-//====================================================================================================
-
-void testAltPID()
-{
-  // Use functions and write alternate control scheme to keep the quad hovering in a particular GPS column.
-}
 
 
 
