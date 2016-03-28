@@ -14,26 +14,25 @@
 #include <Servo.h>                                // Used for PWM outputs to Pixhawk Controller
 
 //====================================================================================================
-//                               General_Global_Variables/Declarations                                           
+//                                       Creating Objects                                           
 //====================================================================================================
-
-// Serial Communication.
-#define usbSerial Serial
+                                                                           
+#define usbSerial Serial                                                                            // Serial Communication.
 #define gpsSerial Serial1
 #define xbeeSerial Serial2
 
-// BMP180 Barometer.
-Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);
+Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);                                       // BMP180 Barometer.
+Adafruit_BNO055 bno = Adafruit_BNO055();                                                            // BN0055 Accelerometer.
+Adafruit_GPS GPS(&gpsSerial);                                                                       // GPS Hardware.
 
-// BN0055 Accelerometer.
-Adafruit_BNO055 bno = Adafruit_BNO055();
-
-// GPS Hardware.
 #define GPSECHO false
-Adafruit_GPS GPS(&gpsSerial);
+
+//====================================================================================================
+//                               General_Global_Variables/Declarations                                           
+//====================================================================================================
 
 // GPS Variables.
-SIGNAL(TIMER0_COMPA_vect)                           // Interrupt is called once a millisecond, looks for any new GPS data, and stores it.
+SIGNAL(TIMER0_COMPA_vect)                                 // Interrupt is called once a millisecond, looks for any new GPS data, and stores it.
 {
   GPS.read();
 }
@@ -42,7 +41,7 @@ String latConversion,longConversion;
 float targetLat,targetLong;
 int targetHeading;
 boolean usingInterrupt = false;
-void useInterrupt(boolean);                          // Function prototype keeps arduino happy?
+void useInterrupt(boolean);                               // Function prototype keeps arduino happy?
 
 // XBee Parsing Variables.
 int comma = 0;
@@ -55,8 +54,11 @@ double distanceToTarget;
 float groundPressure; 
 
 // PWM Servo Outputs.
-Servo throttle,pitch,roll,yaw;
-                       
+Servo throttle;
+Servo pitch;
+Servo roll;
+Servo yaw;
+        
 // Timer Variables.
 unsigned long start = millis();
 uint32_t usbPrintTimer, xbeePrintTimer;
