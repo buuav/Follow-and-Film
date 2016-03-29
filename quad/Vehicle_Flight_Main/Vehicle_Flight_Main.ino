@@ -8,8 +8,8 @@
 #include <Wire.h>                                 // used by BMP180 : Barometer + BN0055
 #include <Adafruit_Sensor.h>                      // used by BMP180 : Barometer + BN0055   
 #include <Adafruit_BMP085_U.h>                    // used by BMP180 : Barometer
-#include <Adafruit_BNO055.h>                      // used by BN0055
-#include <utility/imumaths.h>                     // used by BN0055
+#include <Adafruit_BNO055.h>                      // used by BNO055
+#include <utility/imumaths.h>                     // used by BNO055
 #include <PID_v1.h>                               // used for control loops.
 #include <Servo.h>                                // Used for PWM outputs to Pixhawk Controller
 
@@ -186,31 +186,31 @@ void setup(void)
 void loop(void)
 {
   // Process GPS 
-   if (GPS.newNMEAreceived())                                 // check for updated GPS information
+   if (GPS.newNMEAreceived())                                 // check for updated GPS information.
    {                                      
-     if(GPS.parse(GPS.lastNMEA()) )                           // if we successfully parse it, update our data fields
+     if(GPS.parse(GPS.lastNMEA()) )                           // if we successfully parse it, update our data fields.
      {
-      processGPS();
+      processGPS();                                           // Break down dtaa for current position
      }
    }
   // Gather Data 
-  processXbee();
+  processXbee();                                              // Receive lat,lon of target.
   processBaro(groundPressure);                                // Get current altitude.
-  processIMUheading();
+  processIMUheading();                                        // Obtain Heading, Roll, and Pitch Angles.
   
   // Calculate.
-  distanceToWaypoint();
-  courseToWaypoint();
+  distanceToWaypoint();                                       // Raw Distance to target (no offset).
+  courseToWaypoint();                                         // Compass heading to target.
   
-//  // PID Control.
+  // PID Control.
   altPIDloop();
   yawPIDloop();
   rollPIDloop();
   pitchPIDloop();
   
   // Print (Debugging).
-  printTarget();                                             // Print transponder data.
-  printScreen();                                             // Vehicle GPS Data.
+  printTarget();                                               // Print transponder data.
+  printScreen();                                               // Vehicle GPS Data.
 
   // Test mode Alt.
 //  while(testAlt)
