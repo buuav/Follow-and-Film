@@ -1,19 +1,23 @@
 # Follow-and-Film
 
-Changes: 23 Mar 2016:
-                    
-                    * Added functions to check for preflight communication (safety)
-                    * Created 2 rough PID loops for Altitude and Yaw
-                    * Incorporated the Barometer:
-                                        - It calculates our alt relative to ground not sea level
+Changes: 4 Apr 2016:
+
+* Added offset to yaw euler axis to match proper compass heading
+* Added Pitch and Roll PID loops
+* Added Error Checking status LEDSs (red & green)
+
                     * To Do:
+
                         - Create the waypoint(target) offset so we dont hover right on top of vehicle
-                        - Create the other two PIDs for pitch and Roll
-                        - Actually pull data from the BN0055 IMU (it is properly hooked up and setup in loop)
                         - I want to scope the PWM output from MEGA (once PID loops done) to make sure we
                         understand the value of the signal and how it will correspond to the typical input (from a 
                         transmitter) because I am worried about it being calibrated to radio T/x output values and 
                         not being able to function with the Arduino outputs.
+                        - Add PWM - PPM converter
+                        - Add Andrew's switch to frame and wire it
+                        - Make sure only 1 ESC is powering the PixHawk
+                        - Check radio calibration with APM and PixHawk
+                        - Get frame ready to testfly and devise trategy for safe testing...
 
 
 ******************* I am sure I left a few things out but this is the most recent update *************************
