@@ -66,9 +66,15 @@ uint32_t usbPrintTimer, xbeePrintTimer;
 // Testing
 int testAlt = 5;                                            // Analog read pin.
 
+// Blinking Update LED
+int redLED = 4;
+int greenLED = 5;
+
 //====================================================================================================
 //                                     PID_Variables                                          
 //====================================================================================================
+
+                          // ADD PD CONTROLLER FOR THE DISTANCE???
 
 // Altitude 
 double setAltitude = 50;                                      // Around 150 feet?
@@ -171,12 +177,14 @@ void setup(void)
   pitchPID.SetOutputLimits(1000,2000);
 
   // Safety
+  pinMode(redLED,OUTPUT);
+  pinMode(greenLED,OUTPUT);
+  digitalWrite(redLED,LOW);
+  digitalWrite(greenLED,LOW);
   //checkGPSfix();                                            // Loop until it has a fix.
-  //checkXbeeFix();                                           // Loop until we have parsed a non-zero value from transponder.
-  altCheck();                                                 // Loop until we have good altimeter calibration.
-
-  // Testing
-  pinMode(testAlt,INPUT);
+  checkXbeeFix();                                           // Loop until we have parsed a non-zero value from transponder.
+  altCheck();                                               // Loop until we have good altimeter calibration.
+  digitalWrite(greenLED,HIGH);
 }
 
 //====================================================================================================
@@ -209,15 +217,9 @@ void loop(void)
   pitchPIDloop();
   
   // Print (Debugging).
-  printTarget();                                               // Print transponder data.
-  printScreen();                                               // Vehicle GPS Data.
+//  printTarget();                                               // Print transponder data.
+//  printScreen();                                               // Vehicle GPS Data.
 
-  // Test mode Alt.
-//  while(testAlt)
-//{
-//  testAltPID();
-//}
-   
 }
 
 // INFINTIE LOOP TO PREVENT FLYING WHEN THERE IS A LOSS IN COMMUNICATION? 

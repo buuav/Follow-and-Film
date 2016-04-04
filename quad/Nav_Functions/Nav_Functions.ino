@@ -37,6 +37,13 @@ void processIMUheading()
    
   currentHeading = currentHeading * 180/M_PI;                           // Convert radians to degrees for readability.
 
+  // Other Magnetic Processing
+  float eulerHeading = IMUevent.orientation.x + 100;
+  if(eulerHeading > 360)
+  {
+    eulerHeading = eulerHeading - 360;
+  }
+  
   // Display (Debugging)
   usbSerial.print("Roll:  ");
   usbSerial.print(currentRoll);
@@ -46,6 +53,9 @@ void processIMUheading()
   usbSerial.print("\t");
   usbSerial.print("Heading: ");
   usbSerial.println(currentHeading);
+  usbSerial.print("\t");
+  usbSerial.print("euler.Yaw: ");
+  usbSerial.println(eulerHeading);
   
 }
 //====================================================================================================
@@ -200,6 +210,10 @@ void checkGPSfix()
     {
       GPS.parse(GPS.lastNMEA());
     }
+    digitalWrite(redLED,HIGH);
+    delay(500);
+    digitalWrite(redLED,LOW);
+    delay(500);
   }
 }
 
@@ -209,6 +223,10 @@ void checkXbeeFix()
   while ((targetLat == 0) && (targetLong == 0))
   {
     processXbee();
+    digitalWrite(redLED,HIGH);
+    delay(300);
+    digitalWrite(redLED,LOW);
+    delay(300);
   }
   usbSerial.print("We are now Communicating"); usbSerial.print("\n");
   delay(2000);
@@ -221,6 +239,10 @@ void altCheck()
   {
     getGroundPressure();
     processBaro(groundPressure);
+    digitalWrite(redLED,HIGH);
+    delay(100);
+    digitalWrite(redLED,LOW);
+    delay(100);
   }
 }
 
@@ -241,6 +263,7 @@ void printTarget()
   usbSerial.print("\n");
   usbSerial.print("Altitude:    ");
   usbSerial.print(currentAltitude); Serial.println(" m");
+  usbSerial.print("\n");
   //usbSerial.print("Ground Level:  ");
   //usbSerial.print(groundPressure); Serial.println(" m");
 }
@@ -275,19 +298,4 @@ void printScreen()
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
