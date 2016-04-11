@@ -34,7 +34,7 @@ void altPIDloop()
 
 void yawPIDloop()
 {                                                                  
- yawPID.SetTunings(AltConsKp,AltConsKi,AltConsKd);
+ yawPID.SetTunings(yawConsKp,yawConsKi,yawConsKd);
  yawPID.Compute();
  yaw.writeMicroseconds(yawOut);                                    // PWM Control ouput sent to pin 13, THROTTLE.
 }
@@ -49,6 +49,10 @@ void rollPIDloop()
     if (desiredRoll > 30)
     {
       desiredRoll = 30;                                            // Make sure we do not exceed a 30 deg. bank.
+    }
+    else if (desiredRoll < -30)
+    {
+      desiredRoll = -30;
     }
     rollPID.SetTunings(rollConsKp,rollConsKi,rollConsKd);
     rollPID.Compute();
@@ -65,6 +69,10 @@ void pitchPIDloop()
   if (desiredPitch > 30)
     {
       desiredPitch = 30;                                            // Make sure we do not exceed a 30 deg. bank.
+    }
+    else if(desiredPitch < -30)
+    {
+      desiredPitch = -30;
     }
     pitchPID.SetTunings(pitchConsKp,pitchConsKi,pitchConsKd);
     pitchPID.Compute();

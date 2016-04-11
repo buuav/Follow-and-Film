@@ -21,41 +21,40 @@ void processIMUheading()
 
   // Magnetometer
   imu::Vector<3> mag = bno.getVector(Adafruit_BNO055::VECTOR_MAGNETOMETER);
-  currentHeading = atan2(mag.y(),mag.x());
+  float magHeading = atan2(mag.y(),mag.x());
   float declinationAngle = 0.24;
-  currentHeading += declinationAngle;
-  
-  if(currentHeading < 0)                                                // Correct for when signs are reversed.
+  magHeading += declinationAngle;
+  if(magHeading < 0)                                            // Correct for when signs are reversed.
   {
-    currentHeading += 2*PI;
+    magHeading += 2*PI;
   }
   
-  if(currentHeading > 2*PI)                                             // Check for wrap due to addition of declination.
+  if(magHeading > 2*PI)                                         // Check for wrap due to addition of declination.
   {
-    currentHeading -= 2*PI;
+    magHeading -= 2*PI;
   }
    
-  currentHeading = currentHeading * 180/M_PI;                           // Convert radians to degrees for readability.
+  magHeading = magHeading * 180/M_PI;                           // Convert radians to degrees for readability.
 
   // Other Magnetic Processing
-  float eulerHeading = IMUevent.orientation.x + 100;
-  if(eulerHeading > 360)
+  currentHeading = IMUevent.orientation.x + 100;                // Adding offset from the Z-axis 
+  if(currentHeading > 360)
   {
-    eulerHeading = eulerHeading - 360;
+    currentHeading = currentHeading - 360;                      // Account for angles > 360 deg
   }
   
-  // Display (Debugging)
-  usbSerial.print("Roll:  ");
-  usbSerial.print(currentRoll);
-  usbSerial.print("\t");
-  usbSerial.print("Pitch: ");
-  usbSerial.print(currentPitch);
-  usbSerial.print("\t");
-  usbSerial.print("Heading: ");
-  usbSerial.println(currentHeading);
-  usbSerial.print("\t");
-  usbSerial.print("euler.Yaw: ");
-  usbSerial.println(eulerHeading);
+//  // Display (Debugging)
+//  usbSerial.print("Roll:  ");
+//  usbSerial.print(currentRoll);
+//  usbSerial.print("\t");
+//  usbSerial.print("Pitch: ");
+//  usbSerial.print(currentPitch);
+//  usbSerial.print("\t");
+//  usbSerial.print("Heading: ");
+//  usbSerial.println(currentHeading);
+//  usbSerial.print("\t");
+//  usbSerial.print("mag_Heading: ");
+//  usbSerial.println(magHeading);
   
 }
 //====================================================================================================
@@ -73,7 +72,7 @@ float getGroundPressure()
 
 void processBaro(float groundPressure)
 {
-  sensors_event_t event;                          // Get a new sensor event.
+  sensors_event_t event;                            // Get a new sensor event.
   bmp.getEvent(&event);
   float temperature;
   bmp.getTemperature(&temperature);
@@ -104,13 +103,19 @@ void useInterrupt(boolean v)
 
 void processGPS()
 {
-  currentLat = convertDegMinToDecDeg(GPS.latitude);
-  currentLong = convertDegMinToDecDeg(GPS.longitude);
-
-  if (GPS.lat == 'S')            // make them signed
-    currentLat = -currentLat;
-  if (GPS.lon = 'W')
-    currentLong = -currentLong;
+   if (GPS.newNMEAreceived())                                 // check for updated GPS information.
+   {                                      
+     if(GPS.parse(GPS.lastNMEA()) )                           // if we successfully parse it, update our data fields.
+     {
+        currentLat = convertDegMinToDecDeg(GPS.latitude);
+        currentLong = convertDegMinToDecDeg(GPS.longitude);
+      
+        if (GPS.lat == 'S')            // make them signed
+          currentLat = -currentLat;
+        if (GPS.lon = 'W')
+          currentLong = -currentLong;
+     }
+   }
 }
 
 // Decimanl Degree Conversion.
@@ -261,6 +266,8 @@ void printTarget()
   usbSerial.print("\n");
   usbSerial.print("Desired Heading: "); usbSerial.print(targetHeading);
   usbSerial.print("\n");
+  usbSerial.print("Current Heading: "); usbSerial.print(currentHeading);
+  usbSerial.print("\n");
   usbSerial.print("Altitude:    ");
   usbSerial.print(currentAltitude); Serial.println(" m");
   usbSerial.print("\n");
@@ -298,4 +305,3 @@ void printScreen()
     }
   }
 }
-
