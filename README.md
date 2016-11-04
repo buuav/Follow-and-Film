@@ -1,15 +1,30 @@
 # Follow-and-Film
 
-Changes: 4 Apr 2016:
+Accomplished (11/4/16):
+-----------------------
 
-* Added offset to yaw euler axis to match proper compass heading
-* Added Pitch and Roll PID loops
-* Added Error Checking status LEDSs (red & green)
+- [x] The Pixhawk is calibrated
+- [x] Escs have been calibrated
+- [x] Max455 chip is still toggling
+- [x] Transponder is communicating 
+- [x] Vehicle is r/x data + calculating distance and angle to target
 
-                    * To Do:
+Mechanical:
+-----------
+- [ ] Begin designing gimbal?
+- [ ] Research / purchase gimbal
+- [ ] Design mounting structure 
+- [ ] Battery Mount Location
 
-                        - Create the waypoint(target) offset so we dont hover right on top of vehicle
-                        - PID values for YAW within PixHawk need to be adjusted...when flying, the inuts are delayed but smooth so I think all three terms should be incremented close to the values currently running on the pitch and roll axes. 
+Software to do:
+--------------
+- [ ] Smooth out / filter the altitiude algorithm 
+- [ ] Check IMU oriantations 
+- [ ] Evaluate PID (4) outputs (direction and magnitude)
+- [ ] Continue to develop safety features
 
+Testing:
+--------
+- [ ] Manual flight test ASAP
+- [ ] Test each contorl loop while attached to our board (requires GPS lock)
 
-******************* I am sure I left a few things out but this is the most recent update *************************
