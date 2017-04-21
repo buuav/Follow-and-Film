@@ -1,12 +1,3 @@
-////
-////  GPS.cpp
-////  gps
-////
-////  Created by Hadi Zayer on 3/23/17.
-////Copyright © 2016 Connor. All rights reserved.
-////  Copyright © 2017 Hadi Zayer. All rights reserved.
-////
-//
 #include "GPS.hpp"
 
 

@@ -1,10 +1,3 @@
-//
-//  Point.h
-//  gps
-//
-//  Created by Hadi Zayer on 4/7/17.
-//  Copyright © 2017 Hadi Zayer. All rights reserved.
-
 #ifndef Coordinate_h
 #define Coordinate_h
 

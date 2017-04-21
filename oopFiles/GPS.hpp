@@ -1,11 +1,3 @@
-//
-//  GPS.hpp
-//  gps
-//
-//  Created by Hadi Zayer on 3/23/17.
-//  Copyright © 2017 Hadi Zayer. All rights reserved.
-//
-
 #ifndef GPS_hpp
 #define GPS_hpp
 
